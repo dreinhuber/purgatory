@@ -6,17 +6,13 @@ const ModuleStyle = `
 
   form {
     background-color: #0c4727;
+    border-radius: 15px;
     display: flex;
     flex-direction: column;
     padding: 3vh 0;
     text-align: center;
     width: 70vw;
-
-    button {
-      width: 20vw;
-      margin-left: 50%;
-      transform: translateX(-50%);
-    }
+    z-index: 10;
   }
 `;
 

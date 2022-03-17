@@ -24,13 +24,15 @@ function ReportDetails({ currentPark, setIssueObject, onSubmit }) {
     });
   };
 
-  const generateTrailMarkers = (marker, max) => {
+  const generateTrailMarkers = (marker, max, trail) => {
     const markers = [];
     for (let i = 1; i <= max; i += 1) {
       markers.push(marker + i);
     }
     setTrailMarkers(markers);
     setSelectedMarker(markers[0]);
+    setSelectedTrail(trail);
+    console.log(trail);
   };
 
   const handleMarkerSelect = (e) => {
@@ -55,10 +57,8 @@ function ReportDetails({ currentPark, setIssueObject, onSubmit }) {
   };
 
   useEffect(() => {
-    const { marker } = currentPark.trails[0];
-    const { lastMarker } = currentPark.trails[0];
-    setSelectedTrail(currentPark.trails[0].name);
-    generateTrailMarkers(marker, lastMarker);
+    const { marker, lastMarker, name } = currentPark.trails[0];
+    generateTrailMarkers(marker, lastMarker, name);
   }, []);
 
   useEffect(() => {

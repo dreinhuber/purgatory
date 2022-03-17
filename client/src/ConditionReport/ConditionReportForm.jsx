@@ -17,7 +17,7 @@ function ConditionReportForm() {
 
   const submitIssue = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3000/parks/issues', {
+    axios.post('/parks/issues', {
       data: issueObject,
     });
   };

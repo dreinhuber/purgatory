@@ -1,5 +1,7 @@
 const { Issue, Trail, Park } = require('./db');
 
+const checkParksForIssues = (park) => park.trails.filter((trail) => trail.issues.length);
+
 module.exports = {
   createNewPark: ({ data }) => {
     const parkSubmission = data;
@@ -17,7 +19,6 @@ module.exports = {
 
     return park.save();
   },
-  findParkByName: ({ data }) => Park.findOne({ parkName: data }),
   createNewIssue: ({ data }) => {
     const { park, trail } = data;
     const issue = new Issue({
@@ -34,6 +35,12 @@ module.exports = {
         parkData.save();
       });
   },
+  getAllIssues: async (req, res) => {
+    const parks = await Park.find();
+    const trailsWithIssues = [...parks.map((park) => checkParksForIssues(park))].flat();
+    res.status(200).send(trailsWithIssues);
+  },
+  findParkByName: ({ data }) => Park.findOne({ parkName: data }),
 };
 
 /*

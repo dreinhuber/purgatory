@@ -1,7 +1,12 @@
 const path = require('path');
 const express = require('express');
 
-const { createNewPark, findParkByName, createNewIssue } = require('./db/queries');
+const {
+  createNewPark,
+  findParkByName,
+  createNewIssue,
+  getAllIssues,
+} = require('./db/queries');
 
 const app = express();
 const PORT = process.env.port || 3000;
@@ -9,9 +14,7 @@ const PORT = process.env.port || 3000;
 app.use(express.static(path.join(__dirname, '../client/dist/')));
 app.use(express.json());
 
-app.get('/parks', (req, res) => {
-  res.send('Hello World!');
-});
+app.get('/parks/issues', getAllIssues);
 
 app.post('/parks/search', async (req, res) => {
   const park = await findParkByName(req.body);

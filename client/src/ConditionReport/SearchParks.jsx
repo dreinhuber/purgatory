@@ -16,7 +16,7 @@ function SearchParks({
   const handleParkSearchSubmit = (e) => {
     e.preventDefault();
     axios.post(
-      'http://localhost:3000/parks/search',
+      '/parks/search',
       { data: parkSearchInput },
     )
       .then(({ data }) => {
