@@ -2,6 +2,45 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const IssueForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+
+  select {
+    padding: 5px;
+    margin-left: 2em;
+    background-color: #95c4b4;
+    font-family: inherit;
+  }
+
+  #summary {
+    width: 50vw;
+  }
+
+  #selectors {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 3vw;
+    margin-bottom: 3vw;
+  }
+
+  textarea {
+    border: thin solid #517868;
+    box-shadow: 0 0 1px #ffffff;
+    background-color: #95c4b4;
+    color:rgb(73, 28, 7);
+    font-family: inherit;
+    font-size: 1.25em;
+    padding: 7px;
+    margin: 5px;
+    min-height: 20vh;
+    width: 50vw;
+  }
+`;
 
 function ReportDetails({ currentPark, setIssueObject, onSubmit }) {
   const [trailMarkers, setTrailMarkers] = useState([]);
@@ -22,6 +61,7 @@ function ReportDetails({ currentPark, setIssueObject, onSubmit }) {
       summary: summaryInput,
       description: descriptionInput,
     });
+    console.log(selectedTrail);
   };
 
   const generateTrailMarkers = (marker, max, trail) => {
@@ -32,7 +72,6 @@ function ReportDetails({ currentPark, setIssueObject, onSubmit }) {
     setTrailMarkers(markers);
     setSelectedMarker(markers[0]);
     setSelectedTrail(trail);
-    console.log(trail);
   };
 
   const handleMarkerSelect = (e) => {
@@ -49,11 +88,10 @@ function ReportDetails({ currentPark, setIssueObject, onSubmit }) {
 
   const handleTrailSelect = (e) => {
     const selection = e.target.value;
-    setSelectedTrail(currentPark.trails[selection]);
     const { marker } = currentPark.trails[selection];
     const { lastMarker } = currentPark.trails[selection];
-
     generateTrailMarkers(marker, lastMarker);
+    setSelectedTrail(currentPark.trails[selection].name);
   };
 
   useEffect(() => {
@@ -66,29 +104,33 @@ function ReportDetails({ currentPark, setIssueObject, onSubmit }) {
   }, [selectedTrail, selectedMarker, summaryInput, descriptionInput]);
 
   return (
-    <div>
+    <IssueForm>
+      <div id="selectors">
+        <label>
+          Trail Name:
+          <select onChange={handleTrailSelect}>
+            {trailNames.map((name, index) => <option value={index}>{name}</option>)}
+          </select>
+        </label>
+        <label>
+          Nearest Trail Marker:
+          <select onChange={handleMarkerSelect}>
+            {trailMarkers.map((marker) => <option value={marker}>{marker}</option>)}
+          </select>
+        </label>
+      </div>
       <label>
-        Trail Name
-        <select onChange={handleTrailSelect}>
-          {trailNames.map((name, index) => <option value={index}>{name}</option>)}
-        </select>
+        Category/Summary:
+        <br />
+        <input id="summary" type="text" onChange={handleIssueSummary} />
       </label>
       <label>
-        Nearest Trail Marker:
-        <select onChange={handleMarkerSelect}>
-          {trailMarkers.map((marker) => <option value={marker}>{marker}</option>)}
-        </select>
-      </label>
-      <label>
-        Short Summary
-        <input type="text" onChange={handleIssueSummary} />
-      </label>
-      <label>
-        Description
-        <input type="text" onChange={handleIssueDescription} />
+        Longer Description:
+        <br />
+        <textarea type="text" onChange={handleIssueDescription} />
       </label>
       <button type="submit" onClick={onSubmit}>Submit Issue</button>
-    </div>
+    </IssueForm>
   );
 }
 

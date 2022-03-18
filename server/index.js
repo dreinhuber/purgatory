@@ -6,6 +6,7 @@ const {
   findParkByName,
   createNewIssue,
   getAllIssues,
+  deleteIssue,
 } = require('./db/queries');
 
 const app = express();
@@ -15,6 +16,11 @@ app.use(express.static(path.join(__dirname, '../client/dist/')));
 app.use(express.json());
 
 app.get('/parks/issues', getAllIssues);
+
+app.post('/parks/issues/delete', async (req, res) => {
+  const del = await deleteIssue(req.body);
+  res.status(201).send(del);
+});
 
 app.post('/parks/search', async (req, res) => {
   const park = await findParkByName(req.body);

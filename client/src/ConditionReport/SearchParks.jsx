@@ -2,6 +2,40 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const ParkSearch = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+
+  input {
+    width: 20vw;
+  }
+
+  #search-parks {
+    background-color: #cef2e9;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    margin: 3px;
+    margin-top: 3vh;
+    padding: 5px;
+    max-width: 5em;
+    height: 2.2em;
+
+    :hover {
+      color: gold;
+      background-color: #5d9184;
+      box-shadow: -1px 1px grey;
+    }
+
+    :active {
+      background-color: #4c7369;
+      box-shadow: none;
+    }
+  }
+`;
 
 function SearchParks({
   setParkExists,
@@ -28,13 +62,14 @@ function SearchParks({
   };
 
   return (
-    <div>
+    <ParkSearch>
       <label>
-        Park Name
+        Which Park has an issue?
+        <br />
         <input type="text" onChange={handleParkSearchInput} />
       </label>
-      <button type="submit" onClick={handleParkSearchSubmit}>Search</button>
-    </div>
+      <button type="submit" onClick={handleParkSearchSubmit} id="search-parks">Search</button>
+    </ParkSearch>
   );
 }
 

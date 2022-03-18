@@ -4,9 +4,10 @@ import styled from 'styled-components';
 
 const IssuesViewer = styled.table`
   color: #c1e9d5;
-  background-color: #0c4727;
+  background-color: #174f3b;
   border-radius: 15px;
-  box-shadow: -5px 5px darkgreen;
+  box-shadow: -3px 3px #cf7963;
+  border: thick solid #b5614c;
   margin-left: 50%;
   margin-top: 3vh;
   margin-bottom: 3vh;
@@ -19,20 +20,21 @@ const IssuesViewer = styled.table`
 
   th {
     font-family: 'Oxanium', sans-serif;
-    font-size: 2vw;
+    font-size: 1.5vw;
     color: white;
   }
 
   td {
     background-color: #cec8b1ac;
     color: #0d4d29;
-    font-size: 1.75vw;
-    padding: 1vw;
+    font-size: 1vw;
+    padding: 0.5vw;
   }
 
 `;
 
 const formatAndStoreIssues = (trails, setIssues) => {
+  console.log(trails);
   const formattedIssues = trails.map((trail) => {
     const formattedIssue = {
       park: trail.park,
@@ -44,12 +46,14 @@ const formatAndStoreIssues = (trails, setIssues) => {
       description,
       summary,
       photos,
+      _id,
     }) => {
       formattedIssue.date = date;
       formattedIssue.marker = marker;
       formattedIssue.description = description;
       formattedIssue.summary = summary;
       formattedIssue.photos = photos;
+      formattedIssue.id = _id;
     });
     return formattedIssue;
   });
@@ -65,6 +69,14 @@ function ReportViewer() {
       .then(({ data }) => {
         formatAndStoreIssues(data, setIssues);
       });
+  };
+
+  const deleteIssue = (e) => {
+    e.preventDefault();
+    const issue = issues.filter((where) => (where.id === e.target.value));
+    axios.post('/parks/issues/delete', {
+      data: issue[0],
+    });
   };
 
   useEffect(() => { getAllIssues(); }, []);
@@ -96,3 +108,15 @@ function ReportViewer() {
 }
 
 export default ReportViewer;
+
+/*
+<td>
+  <button
+    type="button"
+    value={issue.id}
+    onClick={deleteIssue}
+  >
+    Done
+  </button>
+</td>
+*/

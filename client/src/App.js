@@ -7,7 +7,7 @@ import ReportViewer from './ReportViewer/ReportViewer';
 
 const GlobalStyle = createGlobalStyle`
   body {
-    background: linear-gradient(darksalmon, coral);
+    background: linear-gradient(#dbaca0, coral);
     background-repeat: no-repeat;
     background-attachment: fixed;
     display: flex;
@@ -15,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Rubik', sans-serif;
   }
   header {
-    color: rgba(12, 71, 39, 0.9);
+    color: #2c4f46;
     font-family: 'Oxanium', sans-serif;
     font-size: 5vh;
     font-weight: 700;
@@ -24,7 +24,7 @@ const GlobalStyle = createGlobalStyle`
     text-shadow: 0 0 60px rgba(255, 255, 255, 0.7);
   }
   button {
-      width: 20vw;
+      width: 15vw;
       margin-left: 50%;
       transform: translateX(-50%);
       cursor: pointer;
@@ -34,37 +34,77 @@ const GlobalStyle = createGlobalStyle`
 const Tabs = styled.nav`
   display: flex;
   flex-direction: row;
+  justify-content: center;
+
+  #generate {
+    border-left: thick solid #cf7963;
+    border-radius: 15px 0 0 0;
+  }
+  #issues {
+    border-right: thick solid #cf7963;
+    border-radius: 0 15px 0 0;
+  }
 `;
 
 const NavButton = styled.button`
-    background-color: #c1e9d5;
+    background-color: #cf7963;
     border: none;
+    color: #0c4727;
+    font-weight: 600;
+    font-size: 0.5em;
     margin: 0;
     padding: 25px;
-    transform: translateX(95%) translateY(40px);
+    transform: translateY(40px);
+    border-top: thick solid #cf7963;
 
     :hover {
-      background-color: beige;
+      background-color: #db907d;
+      color: #3f703e;
+      box-shadow: inset 0 0 3px #595044;
     }
 `;
 
+const SelectedNav = styled.button`
+  background-color: #b5614c;
+  border: none;
+  color: gold;
+  font-weight: 600;
+  font-size: 0.5em;
+  margin: 0;
+  padding: 25px;
+  border-top: thick solid #cf7963;
+  transform: translateY(40px);
+  box-shadow: inset 0 0 3px #595044;
+  :hover {
+    cursor: default;
+  }
+`;
+
 function App() {
-  const [currentView, setCurrentView] = useState(<ParkGenerator />);
-  const [currentTab, setCurrentTab] = useState('generate');
+  const [currentView, setCurrentView] = useState(<ConditionReportForm />);
+  const [selectGenerate, setSelectGenerate] = useState(false);
+  const [selectReport, setSelectReport] = useState(true);
+  const [selectIssues, setSelectIssues] = useState(false);
 
   const toggleView = (e) => {
     e.preventDefault();
     if (e.target.id === 'generate') {
       setCurrentView(<ParkGenerator />);
-      setCurrentTab('generate');
+      setSelectGenerate(true);
+      setSelectReport(false);
+      setSelectIssues(false);
     }
     if (e.target.id === 'report') {
       setCurrentView(<ConditionReportForm />);
-      setCurrentTab('report');
+      setSelectGenerate(false);
+      setSelectReport(true);
+      setSelectIssues(false);
     }
     if (e.target.id === 'issues') {
       setCurrentView(<ReportViewer />);
-      setCurrentTab('issues');
+      setSelectGenerate(false);
+      setSelectReport(false);
+      setSelectIssues(true);
     }
   };
 
@@ -73,11 +113,17 @@ function App() {
       <GlobalStyle />
       <div className="App">
         <header className="App-header">
-          Purgatory
+          Park Tracker
           <Tabs>
-            <NavButton type="button" id="generate" current={currentTab} onClick={toggleView}>Park Generator</NavButton>
-            <NavButton type="button" id="report" current={currentTab} onClick={toggleView}>Report an Issue</NavButton>
-            <NavButton type="button" id="issues" current={currentTab} onClick={toggleView}>View Issues</NavButton>
+            {selectGenerate
+              ? <SelectedNav id="generate">Park Generator</SelectedNav>
+              : <NavButton type="button" id="generate" onClick={toggleView}>Park Generator</NavButton>}
+            {selectReport
+              ? <SelectedNav>Report an Issue</SelectedNav>
+              : <NavButton type="button" id="report" onClick={toggleView}>Report an Issue</NavButton>}
+            {selectIssues
+              ? <SelectedNav id="issues">View Issues</SelectedNav>
+              : <NavButton type="button" id="issues" onClick={toggleView}>View Issues</NavButton>}
           </Tabs>
         </header>
         {currentView}

@@ -5,6 +5,7 @@ const checkParksForIssues = (park) => park.trails.filter((trail) => trail.issues
 module.exports = {
   createNewPark: ({ data }) => {
     const parkSubmission = data;
+    console.log(data);
     const trails = parkSubmission.trails.map((trail) => new Trail({
       name: trail.name,
       marker: trail.markerShortHand,
@@ -30,7 +31,7 @@ module.exports = {
     return Park.findOne({ parkName: park })
       .then((parkData) => {
         parkData.trails
-          .find((where) => where.name === trail.name)
+          .find((where) => where.name === trail)
           .issues.push(issue);
         parkData.save();
       });
@@ -39,6 +40,15 @@ module.exports = {
     const parks = await Park.find();
     const trailsWithIssues = [...parks.map((park) => checkParksForIssues(park))].flat();
     res.status(200).send(trailsWithIssues);
+  },
+  deleteIssue: ({ data }) => {
+    const { park, trail, id } = data;
+    return Park.findOne({ parkName: park })
+      .then((parkData) => {
+        parkData.trails.find((where) => where.name === trail)
+          .issues.filter((issue) => !(issue.id === id));
+        parkData.save();
+      });
   },
   findParkByName: ({ data }) => Park.findOne({ parkName: data }),
 };
