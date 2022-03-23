@@ -12,6 +12,7 @@ const ConditionForm = styled.div`
 
 function ConditionReportForm() {
   const [parkExists, setParkExists] = useState(false);
+  const [issuePosted, setIssuePosted] = useState(false);
   const [currentPark, setCurrentPark] = useState({});
   const [issueObject, setIssueObject] = useState({});
 
@@ -19,8 +20,22 @@ function ConditionReportForm() {
     e.preventDefault();
     axios.post('/parks/issues', {
       data: issueObject,
-    });
+    })
+      .then(() => {
+        setIssuePosted(true);
+        alert('Issue posted, thank you for using this service!');
+      });
   };
+
+  if (issuePosted) {
+    return (
+      <ConditionReportForm>
+        <form>
+          <h2>Thank you for posting your issue</h2>
+        </form>
+      </ConditionReportForm>
+    )
+  }
 
   return (
     <ConditionForm>

@@ -5,7 +5,6 @@ const checkParksForIssues = (park) => park.trails.filter((trail) => trail.issues
 module.exports = {
   createNewPark: ({ data }) => {
     const parkSubmission = data;
-    console.log(data);
     const trails = parkSubmission.trails.map((trail) => new Trail({
       name: trail.name,
       marker: trail.markerShortHand,

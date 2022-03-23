@@ -31,14 +31,17 @@ function AddTrail({ index, trails, setTrails }) {
   };
 
   const handleNameInput = (e) => {
+    e.preventDefault();
     setTrailDetails({ ...trailDetails, name: e.target.value });
   };
 
   const handleMarkerName = (e) => {
+    e.preventDefault();
     setTrailDetails({ ...trailDetails, markerShortHand: e.target.value });
   };
 
   const handleMarkerNumber = (e) => {
+    e.preventDefault();
     setTrailDetails({ ...trailDetails, lastMarker: e.target.value });
   };
 

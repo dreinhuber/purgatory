@@ -1,40 +1,19 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+/* eslint-disable react/no-unstable-nested-components */
+import React, { useMemo, useState, useEffect } from 'react';
+import { CloudinaryContext, Image } from 'cloudinary-react';
 import axios from 'axios';
 import styled from 'styled-components';
+import Table from './Table';
 
-const IssuesViewer = styled.table`
-  color: #c1e9d5;
-  background-color: #174f3b;
-  border-radius: 15px;
-  box-shadow: -3px 3px #cf7963;
-  border: thick solid #b5614c;
-  margin-left: 50%;
-  margin-top: 3vh;
-  margin-bottom: 3vh;
-  max-height: 60vh;
-  overflow: scroll;
-  position: relative;
-  transform: translateX(-50%);
-  width: 60vw;
-  padding: 4vh;
-
-  th {
-    font-family: 'Oxanium', sans-serif;
-    font-size: 1.5vw;
-    color: white;
-  }
-
-  td {
-    background-color: #cec8b1ac;
-    color: #0d4d29;
-    font-size: 1vw;
-    padding: 0.5vw;
-  }
-
+const ImageViewer = styled.button`
+  border: none;
+  width: fit-content;
+  height: fit-content;
+  padding: 0;
 `;
 
 const formatAndStoreIssues = (trails, setIssues) => {
-  console.log(trails);
   const formattedIssues = trails.map((trail) => {
     const formattedIssue = {
       park: trail.park,
@@ -63,6 +42,13 @@ const formatAndStoreIssues = (trails, setIssues) => {
 
 function ReportViewer() {
   const [issues, setIssues] = useState([]);
+  const [imageSize, setImageSize] = useState(50);
+
+  const toggleImageSize = (e) => {
+    e.preventDefault();
+    const newSize = (imageSize === 50 ? 500 : 50);
+    setImageSize(newSize);
+  };
 
   const getAllIssues = () => {
     axios.get('/parks/issues')
@@ -79,31 +65,62 @@ function ReportViewer() {
     });
   };
 
-  useEffect(() => { getAllIssues(); }, []);
+  useEffect(() => {
+    getAllIssues();
+  }, []);
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Location',
+        columns: [
+          {
+            Header: 'Park',
+            accessor: 'park',
+          },
+          {
+            Header: 'Trail',
+            accessor: 'trail',
+          },
+        ],
+      },
+      {
+        Header: 'Issue Details',
+        columns: [
+          {
+            Header: 'Date',
+            accessor: 'date',
+            Cell: ({ cell: { value } }) => value.substring(0, 10),
+          },
+          {
+            Header: 'Summary',
+            accessor: 'summary',
+          },
+          {
+            Header: 'Description',
+            accessor: 'description',
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  if (issues.length) {
+    return (
+      <div>
+        <Table columns={columns} issues={issues} />
+        {/* <CloudinaryContext cloudName="trailreports">
+          <ImageViewer onClick={toggleImageSize}>
+            <Image publicId="sample" width={imageSize} />
+          </ImageViewer>
+        </CloudinaryContext> */}
+      </div>
+    );
+  }
 
   return (
-    <IssuesViewer>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Park</th>
-          <th>Trail</th>
-          <th>Marker</th>
-          <th>Summary</th>
-          <th>Description</th>
-        </tr>
-        {issues.map((issue) => (
-          <tr className="issue">
-            <td>{issue.date.substring(0, 9)}</td>
-            <td>{issue.park}</td>
-            <td>{issue.trail}</td>
-            <td>{issue.marker}</td>
-            <td>{issue.summary}</td>
-            <td>{issue.description}</td>
-          </tr>
-        ))}
-      </thead>
-    </IssuesViewer>
+    <div />
   );
 }
 
@@ -119,4 +136,36 @@ export default ReportViewer;
     Done
   </button>
 </td>
+*/
+
+/*
+return (
+  <IssuesViewer>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Park</th>
+        <th>Trail</th>
+        <th>Marker</th>
+        <th>Summary</th>
+        <th>Description</th>
+      </tr>
+      {issues.map((issue) => (
+        <tr className="issue">
+          <td>{issue.date.substring(0, 9)}</td>
+          <td>{issue.park}</td>
+          <td>{issue.trail}</td>
+          <td>{issue.marker}</td>
+          <td>{issue.summary}</td>
+          <td>{issue.description}</td>
+          <CloudinaryContext cloudName="trailreports">
+            <ImageViewer onClick={toggleImageSize}>
+              <Image publicId="sample" width={imageSize} />
+            </ImageViewer>
+          </CloudinaryContext>
+        </tr>
+      ))}
+    </thead>
+  </IssuesViewer>
+);
 */

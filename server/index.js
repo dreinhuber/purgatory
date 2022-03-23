@@ -31,13 +31,18 @@ app.post('/parks/issues', async (req, res) => {
   try {
     await createNewIssue(req.body);
   } finally {
-    res.status(201).send('Issue Posted');
+    res.status(201).send(true);
   }
 });
 
 app.post('/parks', async (req, res) => {
-  await createNewPark(req.body);
-  res.status(201).send('Park Created');
+  const check = await findParkByName({ data: req.body.data.parkName });
+  if (check === null) {
+    await createNewPark(req.body);
+    res.status(201).send(true);
+  } else {
+    res.send(false);
+  }
 });
 
 app.listen(PORT, () => {

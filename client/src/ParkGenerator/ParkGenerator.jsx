@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import AddTrail from './AddTrail';
@@ -15,6 +15,7 @@ function ParkGenerator() {
   const [trailInputs, setTrailInputs] = useState([]);
   const [parkName, setParkName] = useState('');
   const [trails, setTrails] = useState([]);
+  const [parkPosted, setParkPosted] = useState(null);
 
   const addTrailInput = (e) => {
     e.preventDefault();
@@ -43,11 +44,18 @@ function ParkGenerator() {
 
     axios.post('http://localhost:3000/parks', {
       data: newParkObject,
-    });
+    })
+      .then((res) => {
+        setParkPosted(res.data);
+      });
   };
 
-  return (
-    <Generator>
+  useEffect(() => {
+
+  }, [parkPosted]);
+
+  const renderScreen = (parkPosted) => {
+    const buildPark = (
       <form className="gen-form">
         <label>
           Park Name:
@@ -59,6 +67,28 @@ function ParkGenerator() {
         <button type="button" onClick={addTrailInput}>Add Trail</button>
         <button type="submit" onClick={handleSubmit}>Submit</button>
       </form>
+    );
+    if (parkPosted === null) {
+      return buildPark;
+    }
+    if (parkPosted === true) {
+      return (
+        <form>
+          <h2>
+            Thank you for adding your park!
+          </h2>
+        </form>
+      );
+    }
+    if (parkPosted === false) {
+      alert('Park exists, please use a different name');
+      return buildPark;
+    }
+  };
+
+  return (
+    <Generator>
+      {renderScreen(parkPosted)}
     </Generator>
   );
 }
