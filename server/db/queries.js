@@ -50,6 +50,7 @@ module.exports = {
       });
   },
   findParkByName: ({ data }) => Park.findOne({ parkName: data }),
+  getAllParkNames: () => Park.find({}),
 };
 
 /*

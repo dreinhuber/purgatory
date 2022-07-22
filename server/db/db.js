@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const { ATLASSPWD } = require('../../secrets');
 
 const { Schema } = mongoose;
 
-mongoose.connect('mongodb://localhost/parks', {
+mongoose.connect(`mongodb+srv://Cluster08306:${ATLASSPWD}@cluster08306.bimlgdo.mongodb.net/?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

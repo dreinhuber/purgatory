@@ -1,5 +1,6 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -42,6 +43,7 @@ function SearchParks({
   setCurrentPark,
 }) {
   const [parkSearchInput, setParkSearchInput] = useState('');
+  const [parks, setParks] = ([]);
 
   const handleParkSearchInput = (e) => {
     setParkSearchInput(e.target.value);
@@ -61,12 +63,33 @@ function SearchParks({
       });
   };
 
+  const getAllParkNames = () => {
+    axios.get('/parks/all')
+      .then((data) => {
+        setParks(data);
+        console.log(data);
+      });
+  };
+
+  useEffect(() => {
+    getAllParkNames();
+  }, []);
+
   return (
     <ParkSearch>
       <label>
         Which Park has an issue?
         <br />
-        <input type="text" onChange={handleParkSearchInput} />
+        {parks
+          ? (
+            <>
+              <input list="available-parks" onChange={handleParkSearchInput} />
+              <datalist id="available-parks">
+                {parks.forEach((park) => <option value={park} />)}
+              </datalist>
+            </>
+          )
+          : <input type="text" onChange={handleParkSearchInput} />}
       </label>
       <button type="submit" onClick={handleParkSearchSubmit} id="search-parks">Search</button>
     </ParkSearch>

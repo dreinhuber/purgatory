@@ -15,13 +15,14 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Rubik', sans-serif;
   }
   header {
-    color: #2c4f46;
+    color: #325c4b;
     font-family: 'Oxanium', sans-serif;
-    font-size: 5vh;
+    font-size: 6vh;
     font-weight: 700;
     margin: 2vh;
     text-align: center;
     text-shadow: 0 0 60px rgba(255, 255, 255, 0.7);
+    text-shadow: -2px 2px 2px coral;
   }
   button {
       width: 15vw;
@@ -113,7 +114,7 @@ function App() {
       <GlobalStyle />
       <div className="App">
         <header className="App-header">
-          Park Tracker
+          Purgatory
           <Tabs>
             {selectGenerate
               ? <SelectedNav id="generate">Park Generator</SelectedNav>
